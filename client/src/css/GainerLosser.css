@@ -62,3 +62,7 @@ button {
 .tableSuccessSell{
   background-color: rgb(71, 25, 25);
 }
+
+.hide{
+  display: none;
+}

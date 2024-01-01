@@ -53,14 +53,29 @@ const TradingArea = () => {
         return JSON.stringify(arr1) === JSON.stringify(arr2);
     }
 
-
     useEffect(() => {
-        // Sort the data and get top gainers and losers
+        const snapShotData = realTimeData.filter(item => item.snapShotPercentageChangeValue !== null);
+
+        if (snapShotData.length > 0) {
+            snapShotData.sort((a, b) => b.snapShotPercentageChangeValue - a.snapShotPercentageChangeValue);
+            snapShotData.forEach((item, index) => {
+                item.rank = index + 1;
+            });
+
+            const sortedDataWithRankMap = new Map(snapShotData.map(item => [item.instrument, { ISIN_Code: item.instrument, rank: item.rank }]));
+            localStorage.setItem('sortedDataWithRank', JSON.stringify([...sortedDataWithRankMap.values()]));
+        }
+
+        const storedSortedDataWithRank = JSON.parse(localStorage.getItem('sortedDataWithRank')) || [];
+        const sortedDataWithRankMap = new Map(storedSortedDataWithRank.map(item => [item.ISIN_Code, item.rank]));
+
         const sortedData = [...realTimeData].sort((a, b) => b.percentageChange - a.percentageChange);
-        // console.log(sortedData);
+        sortedData.forEach(item => {
+            item.rank = sortedDataWithRankMap.get(item.instrument) || null;
+        });
+
         const newTopFiveGainer = sortedData.slice(0, 10);
-        let newTopFiveLosser = sortedData.slice(-10);
-        newTopFiveLosser = newTopFiveLosser.reverse();
+        let newTopFiveLosser = sortedData.slice(-10).reverse();
 
         // Check if there is a change before updating the state
         if (!arraysEqual(newTopFiveGainer, topFiveGainer)) {
@@ -72,7 +87,7 @@ const TradingArea = () => {
             setTopFiveLosser(newTopFiveLosser);
             setPastTopFiveLosser(prevPastData => [...prevPastData.slice(-1), newTopFiveLosser]);
         }
-    }, [realTimeData, topFiveGainer, topFiveLosser]);
+    }, [realTimeData, topFiveGainer, topFiveLosser, setTopFiveGainer, setTopFiveLosser, setPastTopFiveGainer, setPastTopFiveLosser]);
 
     // ...
 

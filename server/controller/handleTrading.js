@@ -13,6 +13,7 @@ export const handleTrading = (io) => async (req, res) => {
     // Initialize WebSocket connection and pass onDataReceived callback
     ws = await initWebSocketConnection(token, (RealTimeData, STOCK_INSTRUMENT) => {
         logic(RealTimeData, STOCK_INSTRUMENT, (result) => {
+            console.log(result);
             io.emit('realTimeData', { data: result });
         });
     });

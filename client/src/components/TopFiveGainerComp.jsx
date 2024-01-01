@@ -108,7 +108,8 @@ const TopFiveGainerComp = ({ past }) => {
             <table>
                 <thead>
                     <tr>
-                        <th>ISIN Code</th>
+                        <th>Rank</th>
+                        <th className='hide'>ISIN Code</th>
                         <th>Symbol</th>
                         <th>LTP</th>
                         <th>Percentage Change</th>
@@ -142,7 +143,8 @@ const TopFiveGainerComp = ({ past }) => {
                         return (
                             <tr key={data.instrument} className={rowColor}>
                                 {/* ... (table cell code) */}
-                                <td>{data.instrument}</td>
+                                <td>{data.rank}</td>
+                                <td className='hide'>{data.instrument}</td>
                                 <td>{data.companyName}</td>
                                 <td className={ltpColorClass}>{data.ltp}</td>
                                 <td className={percentageChangeColorClass}>
