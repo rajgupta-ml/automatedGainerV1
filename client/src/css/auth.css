@@ -1,0 +1,18 @@
+.authorization{
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+
+.authorization label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    opacity: 0.5;
+}
+
+.authorization input{
+    padding: 0.4rem 10rem 0.4rem 0.4rem ;
+}
+
