@@ -5,7 +5,7 @@ import '../css/GainerLosser.css';
 import buyAndSellEndpoint from '../apiCalls/buyAndSellEndpoint';
 import getStatusOfTheOrderEndpoint from '../apiCalls/getStatusOfTheOrderEndpoint';
 
-const TopFiveLosserComp = ({ past }) => {
+const TopFiveLosserComp = ({ past, sellAllTrigger }) => {
 
 
     const [prevTick, setPrevTick] = useState([]);
@@ -81,6 +81,9 @@ const TopFiveLosserComp = ({ past }) => {
         localStorage.setItem('successfulSells', JSON.stringify(successfulSells));
     }, [successfulSells]);
 
+    useEffect(() => {
+        console.log("Order placed succefully")
+    }, [sellAllTrigger]);
 
 
     return (
@@ -111,7 +114,7 @@ const TopFiveLosserComp = ({ past }) => {
 
 
 
-                        const rowColor = successfulSells.includes(data.instrument) ? 'tableSuccess' : (changedInstruments.includes(data.instrument) ? 'table-changed' : '');
+                        const rowColor = successfulSells.includes(data.instrument) ? 'tableSuccessSell' : (changedInstruments.includes(data.instrument) ? 'table-changed' : '');
 
                         return (
                             <tr key={data.instrument} className={rowColor}>

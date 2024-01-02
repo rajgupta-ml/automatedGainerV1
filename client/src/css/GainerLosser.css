@@ -6,7 +6,6 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
 }
 
 thead {
@@ -54,6 +53,10 @@ button {
   color: white;
 }
 
+.tableSuccessSell{
+  background-color: #461f1f;
+  color: white;
+}
 .table-changed{
   background-color: #ffffff;
   color: rgb(0, 0, 0);

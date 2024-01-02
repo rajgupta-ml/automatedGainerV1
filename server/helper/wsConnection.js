@@ -38,50 +38,54 @@ export const initWebSocketConnection = async (token, onDataReceived) => {
             },
             followRedirects: true
         });
-
-        ws.on('open', function open() {
-            console.log('connected');
-
-            fs.createReadStream('./controller/data.csv').pipe(csv()).on('data', (data) => {
-                NIFT_100.push(data);
-            }).on('end', () => {
-                console.log("DATA IS READ");
-                NIFT_100.map((instrument) => {
-                    STOCK_INSTRUMENT.push( `NSE_FO|${instrument['ISIN Code']}`);
+       
+            ws.on('open', function open() {
+                console.log('connected');
+    
+                fs.createReadStream('./controller/data.csv').pipe(csv()).on('data', (data) => {
+                    NIFT_100.push(data);
+                }).on('end', () => {
+                    console.log("DATA IS READ");
+                    NIFT_100.map((instrument) => {
+                        STOCK_INSTRUMENT.push( `NSE_FO|${instrument['ISIN Code']}`);
+                    });
+    
+                    setTimeout(function timeout() {
+                        const data = {
+                            guid: "someguid",
+                            method: "sub",
+                            data: {
+                                mode: "full",
+                                instrumentKeys: STOCK_INSTRUMENT
+                            }
+                        };
+                        ws.send(Buffer.from(JSON.stringify(data)));
+                    }, 1000);
                 });
-
-                setTimeout(function timeout() {
-                    const data = {
-                        guid: "someguid",
-                        method: "sub",
-                        data: {
-                            mode: "full",
-                            instrumentKeys: STOCK_INSTRUMENT
-                        }
-                    };
-                    ws.send(Buffer.from(JSON.stringify(data)));
-                }, 1000);
+    
+                ws.on('message', function message(data) {
+                    const RealTimeData = decodeProtobuf(data);
+                    onDataReceived(RealTimeData, STOCK_INSTRUMENT);
+                });
             });
 
-            ws.on('message', function message(data) {
-                const RealTimeData = decodeProtobuf(data);
-                onDataReceived(RealTimeData, STOCK_INSTRUMENT);
+            ws.on("error", function error(e) {
+                console.log(e);
+            })
+            ws.on('close', function close(event) {
+                console.log('disconnected: ', event);
             });
-        });
 
-        ws.on('close', function close() {
-            console.log('disconnected');
-        });
-
-        function decodeProtobuf(buffer) {
-            if (protobufRoot == null) {
-                console.warn("Protobuf part not initialized yet!");
-                return null;
+            function decodeProtobuf(buffer) {
+                if (protobufRoot == null) {
+                    console.warn("Protobuf part not initialized yet!");
+                    return null;
+                }
+            
+                const FeedResponse = protobufRoot.lookupType("com.upstox.marketdatafeeder.rpc.proto.FeedResponse");
+                return FeedResponse.decode(buffer);
             }
-        
-            const FeedResponse = protobufRoot.lookupType("com.upstox.marketdatafeeder.rpc.proto.FeedResponse");
-            return FeedResponse.decode(buffer);
-        }
+            
 
         return ws;
     } catch (error) {
@@ -93,6 +97,9 @@ export const initWebSocketConnection = async (token, onDataReceived) => {
 export const isWebSocketConnected = () => {
     return ws !== null && ws.readyState === WebSocket.OPEN;
 };
+
+
+
 
 
 

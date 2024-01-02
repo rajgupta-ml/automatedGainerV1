@@ -1,34 +1,33 @@
 import { useNavigate } from 'react-router-dom'
 import '../css/dashboard.css'
 import endTradingEndpoint from '../apiCalls/endTradingEndpoint'
-import startTradingEndpoint from '../apiCalls/startTradingEndpoint'
+// import startTradingEndpoint from '../apiCalls/startTradingEndpoint'
 import getPrevCloseEndpoint from '../apiCalls/GetPrevCloseEndpoint'
+import StartTrading from './StartTrading'
 const Dashboard = () => {
 
     const navigate = useNavigate()
-    const handleStartTrading = async () => {
-        const response = await startTradingEndpoint()
 
-
-        try {
-            if (response.data.success) alert(`Trading started on ${Date.now()}`)
-            navigate("/trading-area");
-        } catch (error) {
-            alert("Something is wrong")
-
-        }
-
-    }
 
     const handleEndTrading = async () => {
-        const response = await endTradingEndpoint()
+        const date = new Date();
+        const hour = date.getHours();
+        const min = date.getMinutes();
 
-        if (response.data.success) {
-            localStorage.clear()
-            alert("Logout Successful")
-            navigate('/')
-        } else {
-            alert("Access Token in invalid")
+        if (hour < 3 && min < 30) {
+            alert("Can't End trading sorry")
+
+        } else if (hour >= 3 && min >= 30) {
+            localStorage.clear();
+            const response = await endTradingEndpoint()
+
+            if (response.data.success) {
+                localStorage.clear()
+                alert("Logout Successful")
+                navigate('/')
+            } else {
+                alert("Access Token in invalid")
+            }
         }
     }
 
@@ -44,7 +43,7 @@ const Dashboard = () => {
     return (
         <div className="dashboard-btn">
             <button type='button' onClick={handleGetPrevClose}>Get Previous Day close</button>
-            <button type="button" onClick={handleStartTrading}>Start Trading</button>
+            <StartTrading></StartTrading>
             <button type="button" onClick={handleEndTrading}>End Trading</button>
         </div>
     )

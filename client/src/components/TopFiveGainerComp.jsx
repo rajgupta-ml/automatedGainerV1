@@ -5,7 +5,7 @@ import buyAndSellEndpoint from '../apiCalls/buyAndSellEndpoint';
 // import tralingStopLossEndpoint from '../apiCalls/trailingStopLossEndpoint';
 import getStatusOfTheOrderEndpoint from '../apiCalls/getStatusOfTheOrderEndpoint';
 
-const TopFiveGainerComp = ({ past }) => {
+const TopFiveGainerComp = ({ past, buyAllTrigger }) => {
     const [prevTick, setPrevTick] = useState([]);
     const [latestTick, setLatestTick] = useState([]);
     const [changedInstruments, setChangedInstruments] = useState([]);
@@ -102,6 +102,11 @@ const TopFiveGainerComp = ({ past }) => {
     useEffect(() => {
         localStorage.setItem('successfulBuys', JSON.stringify(successfulBuys));
     }, [successfulBuys]);
+
+
+    useEffect(() => {
+        console.log("Order placed succefully")
+    }, [buyAllTrigger]);
 
     return (
         <div className="gainer-table">

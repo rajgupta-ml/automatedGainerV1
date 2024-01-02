@@ -3,3 +3,46 @@
     gap: 10rem;
     font-size: 16px;
 }
+
+.buyAll, .sellAll{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.buyAllBtn, .sellAllBtn{
+    margin-top: 10px;
+    padding: 10px 60px ;
+    background-color: #4caf50;
+    color: black;
+}
+
+
+.sellAllBtn{
+    background-color: red;
+    color:white;
+}
+
+.boughtAllBtn{
+    pointer-events: none;
+    margin-top: 10px;
+    padding: 10px 25px;
+    background-color: #4caf50;
+    color: black;
+
+}
+
+.SoldAllBtn{
+    pointer-events: none;
+    margin-top: 10px;
+    padding: 10px 25px;
+    background-color: red;
+    color: white;
+}
+
+.flex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
